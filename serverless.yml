@@ -1,0 +1,145 @@
+service: invoice-manager
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  stage: dev
+  runtime: nodejs18.x
+  environment:
+    COGNITO_USER_POOL_ID: !Ref CognitoUserPool
+    COGNITO_USER_POOL_CLIENT_ID: !Ref CognitoUserPoolClient
+    INVOICE_MANAGER_TABLE_NAME: !Ref InvoiceManagerTable
+
+resources:
+  Resources:
+    CognitoUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: ${self:service}-user-pool
+        UsernameAttributes:
+          - email
+    CognitoUserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        UserPoolId:
+          Ref: CognitoUserPool
+        ExplicitAuthFlows:
+          - ADMIN_NO_SRP_AUTH
+        RefreshTokenValidity: 2
+    InvoiceManagerTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+        TableName: "InvoiceManagerTable"
+        AttributeDefinitions:
+          - AttributeName: "PK"
+            AttributeType: "S"
+          - AttributeName: "SK"
+            AttributeType: "S"
+          - AttributeName: "GSI1-PK"
+            AttributeType: "S"
+          - AttributeName: "GSI1-SK"
+            AttributeType: "S"
+        KeySchema:
+          - AttributeName: "PK"
+            KeyType: "HASH"
+          - AttributeName: "SK"
+            KeyType: "RANGE"
+        ProvisionedThroughput:
+          ReadCapacityUnits: 2
+          WriteCapacityUnits: 2
+        GlobalSecondaryIndexes:
+          - IndexName: "GSI1"
+            KeySchema:
+              - AttributeName: "GSI1-PK"
+                KeyType: "HASH"
+              - AttributeName: "GSI1-SK"
+                KeyType: "RANGE"
+            Projection:
+              ProjectionType: "ALL"
+            ProvisionedThroughput:
+              ReadCapacityUnits: 2
+              WriteCapacityUnits: 2
+  Outputs:
+    CognitoUserPoolId:
+      Value:
+        Ref: CognitoUserPool
+      Export:
+        Name: ${self:service}-${self:provider.stage}-CognitoUserPoolId
+    CognitoUserPoolClientId:
+      Value:
+        Ref: CognitoUserPoolClient
+      Export:
+        Name: ${self:service}-${self:provider.stage}-CognitoUserPoolClientId
+    InvoiceManagerTableName:
+      Value:
+        Ref: InvoiceManagerTable
+      Export:
+        Name: ${self:service}-${self:provider.stage}-InvoiceManagerTableName
+
+functions:
+  - ${file(./src/handlers/auth/functions.yml)}
+  - ${file(./src/handlers/users/functions.yml)}
+  - ${file(./src/handlers/invoices/functions.yml)}
+  - ${file(./src/handlers/clients/functions.yml)}
+
+custom:
+  documentation:
+    title: Invoice Manager
+    description: This is a test application to manage invoices
+    version: "1.0.0"
+    models:
+      - name: "User"
+        description: "The User of the application"
+        contentType: "application/json"
+        schema:
+          type: "object"
+          properties:
+            email:
+              type: "string"
+              format: "email"
+            password:
+              type: "string"
+              pattern: "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d!$%@#£€*?&]{8,}$"
+      - name: "Invoice"
+        description: "The Invoice record"
+        contentType: "application/json"
+        schema:
+          type: "object"
+          properties:
+            id:
+              type: "string"
+            owner:
+              type: "string"
+            invoiceNumber:
+              type: "integer"
+            status:
+              type: "string"
+            dueDate:
+              type: "string"
+              format: "date"
+            clientId:
+              type: "string"
+      - name: "Client"
+        description: "The Client record"
+        contentType: "application/json"
+        schema:
+          type: "object"
+          properties:
+            name:
+              type: "string"
+            email:
+              type: "string"
+              format: "string"
+            address:
+              type: "string"
+            phone:
+              type: "string"
+      - name: "EmptyResponse"
+        description: "An empty response"
+        contentType: "application/json"
+        schema:
+          type: "string"
+
+plugins:
+  - serverless-iam-roles-per-function
+  - serverless-openapi-documenter

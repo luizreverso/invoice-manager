@@ -1,0 +1,916 @@
+{
+  "openapi": "3.0.3",
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "pattern": "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d!$%@#£€*?&]{8,}$"
+          }
+        }
+      },
+      "Invoice": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "invoiceNumber": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string"
+          },
+          "dueDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "clientId": {
+            "type": "string"
+          }
+        }
+      },
+      "Client": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          }
+        }
+      },
+      "EmptyResponse": {
+        "type": "string"
+      },
+      "067b90d2-f513-48f4-bfdf-bdb439f8a6fe": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "The username of the user."
+          },
+          "password": {
+            "type": "string",
+            "description": "The password for the user."
+          }
+        }
+      },
+      "e90e7a22-34fb-47e8-bf4e-6088b7ea9cce": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "Bearer token for authentication."
+          }
+        }
+      },
+      "59de1902-5ced-4b0d-a1ea-4097692d4044": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Description of the error."
+          }
+        }
+      },
+      "f9a86cba-bdf9-4606-8dca-5c965997bab9": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Email of the user. Must be a valid email format."
+          },
+          "password": {
+            "type": "string",
+            "description": "Password for the user. Must have 8+ characters, including at least 1 uppercase, 1 lowercase, 1 number and 1 special symbol."
+          }
+        }
+      },
+      "346880c8-7906-4d18-8c58-c4fe96495e15": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "object",
+            "description": "The AWS Cognito user object."
+          }
+        }
+      },
+      "Authorization": {
+        "type": "string"
+      },
+      "d71b8ec7-30c7-4961-9e30-4f58aeaede86": {
+        "type": "object",
+        "properties": {
+          "clientId": {
+            "type": "string",
+            "description": "ID of the client associated with the invoice."
+          },
+          "invoiceNumber": {
+            "type": "string",
+            "description": "Number of the invoice."
+          },
+          "dueDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Due date for the payment of the invoice."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "created",
+              "sent",
+              "paid",
+              "canceled"
+            ],
+            "description": "Current status of the invoice."
+          }
+        }
+      },
+      "invoiceId": {
+        "type": "string"
+      },
+      "9d8cdd99-a9b3-4448-8512-770d96aefe33": {
+        "type": "object",
+        "properties": {
+          "clientId": {
+            "type": "string",
+            "description": "ID of the client associated with the invoice."
+          },
+          "invoiceNumber": {
+            "type": "string",
+            "description": "Number of the invoice."
+          },
+          "dueDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Due date for the payment of the invoice."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "created",
+              "sent",
+              "paid",
+              "canceled"
+            ],
+            "description": "Status of the invoice."
+          }
+        }
+      },
+      "6dc62513-3118-4d9f-b38b-371406b11a5d": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "The ID of the invoice."
+            },
+            "owner": {
+              "type": "string",
+              "description": "The owner of the invoice."
+            },
+            "invoiceNumber": {
+              "type": "string",
+              "description": "The invoice number."
+            },
+            "dueDate": {
+              "type": "string",
+              "format": "date",
+              "description": "Due date for the payment of the invoice."
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "created",
+                "sent",
+                "paid",
+                "canceled"
+              ],
+              "description": "Current status of the invoice."
+            },
+            "client": {
+              "type": "string",
+              "description": "ID of the client associated with the invoice."
+            }
+          }
+        }
+      },
+      "e743d63d-196d-45cd-8e8a-dddf1807bd07": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Full name of the client."
+          },
+          "email": {
+            "type": "string",
+            "description": "Email address of the client."
+          },
+          "address": {
+            "type": "string",
+            "description": "Physical address of the client."
+          },
+          "phone": {
+            "type": "string",
+            "description": "Contact phone number of the client."
+          }
+        }
+      },
+      "clientId": {
+        "type": "string"
+      },
+      "c5fd8388-62a2-40a2-8fc2-5ca00341ae1d": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "clientId": {
+              "type": "string",
+              "description": "Unique ID of the client."
+            },
+            "name": {
+              "type": "string",
+              "description": "Name of the client."
+            },
+            "email": {
+              "type": "string",
+              "description": "Email address of the client."
+            },
+            "address": {
+              "type": "string",
+              "description": "Physical address of the client."
+            },
+            "phone": {
+              "type": "string",
+              "description": "Contact phone number of the client."
+            }
+          }
+        }
+      }
+    }
+  },
+  "info": {
+    "title": "Invoice Manager",
+    "description": "This is a test application to manage invoices",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/login": {
+      "post": {
+        "summary": "User login",
+        "description": "Authenticate a user with provided username and password.",
+        "operationId": "login",
+        "parameters": [],
+        "tags": [],
+        "requestBody": {
+          "description": "Credentials for logging in.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/067b90d2-f513-48f4-bfdf-bdb439f8a6fe"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/e90e7a22-34fb-47e8-bf4e-6088b7ea9cce"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/59de1902-5ced-4b0d-a1ea-4097692d4044"
+                }
+              }
+            },
+            "headers": {}
+          }
+        }
+      }
+    },
+    "/users": {
+      "post": {
+        "summary": "Create a new user in Cognito",
+        "description": "Registers a new user with the provided email and password in AWS Cognito.",
+        "operationId": "createUser",
+        "parameters": [],
+        "tags": [],
+        "requestBody": {
+          "description": "User details for registration.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/f9a86cba-bdf9-4606-8dca-5c965997bab9"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User successfully created in Cognito.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/346880c8-7906-4d18-8c58-c4fe96495e15"
+                }
+              }
+            },
+            "headers": {}
+          }
+        }
+      }
+    },
+    "/invoices": {
+      "post": {
+        "summary": "Create a new invoice",
+        "description": "Registers a new invoice with the provided details.",
+        "operationId": "createInvoice",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Bearer token for user authentication.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Authorization"
+            }
+          }
+        ],
+        "tags": [],
+        "requestBody": {
+          "description": "Invoice data to be added",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/d71b8ec7-30c7-4961-9e30-4f58aeaede86"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Invoice successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Invoice"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad Request. Invalid input.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResponse"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResponse"
+                }
+              }
+            },
+            "headers": {}
+          }
+        }
+      },
+      "get": {
+        "summary": "List all invoices",
+        "description": "Fetches a list of all invoices associated with the authenticated user.",
+        "operationId": "listInvoice",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Bearer token for user authentication.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Authorization"
+            }
+          }
+        ],
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "Invoices list successfully fetched.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/6dc62513-3118-4d9f-b38b-371406b11a5d"
+                }
+              }
+            },
+            "headers": {}
+          }
+        }
+      }
+    },
+    "/invoices/{invoiceId}": {
+      "put": {
+        "summary": "Edit an existing invoice",
+        "description": "Update the details of an existing invoice by providing its ID and the new data.",
+        "operationId": "editInvoice",
+        "parameters": [
+          {
+            "name": "invoiceId",
+            "in": "path",
+            "description": "ID of the invoice to be edited.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/invoiceId"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Bearer token for user authentication.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Authorization"
+            }
+          }
+        ],
+        "tags": [],
+        "requestBody": {
+          "description": "Updated invoice data",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/9d8cdd99-a9b3-4448-8512-770d96aefe33"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Invoice successfully edited.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Invoice"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad Request. Invalid input or missing required fields.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResponse"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "Invoice not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResponse"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResponse"
+                }
+              }
+            },
+            "headers": {}
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an invoice by ID",
+        "description": "Removes an invoice based on its ID from the system.",
+        "operationId": "deleteInvoice",
+        "parameters": [
+          {
+            "name": "invoiceId",
+            "in": "path",
+            "description": "The ID of the invoice to delete.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/invoiceId"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Bearer token for user authentication.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Authorization"
+            }
+          }
+        ],
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "Invoice successfully deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResponse"
+                }
+              }
+            },
+            "headers": {}
+          }
+        }
+      },
+      "get": {
+        "summary": "Retrieve an invoice by ID",
+        "description": "Fetches the details of a specific invoice based on its ID.",
+        "operationId": "getInvoice",
+        "parameters": [
+          {
+            "name": "invoiceId",
+            "in": "path",
+            "description": "The ID of the invoice to retrieve.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/invoiceId"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Bearer token for user authentication.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Authorization"
+            }
+          }
+        ],
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "Invoice details successfully fetched.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Invoice"
+                }
+              }
+            },
+            "headers": {}
+          }
+        }
+      }
+    },
+    "/clients": {
+      "post": {
+        "summary": "Create a new client",
+        "description": "Registers a new client with the given details.",
+        "operationId": "createClient",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Bearer token for user authentication.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Authorization"
+            }
+          }
+        ],
+        "tags": [],
+        "requestBody": {
+          "description": "Client data to be added",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/e743d63d-196d-45cd-8e8a-dddf1807bd07"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Client successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResponse"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "500": {
+            "description": "Invalid input.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResponse"
+                }
+              }
+            },
+            "headers": {}
+          }
+        }
+      },
+      "get": {
+        "summary": "List all clients",
+        "description": "Fetch a list of all registered clients.",
+        "operationId": "listClient",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Bearer token for user authentication.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Authorization"
+            }
+          }
+        ],
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "Successful retrieval of client list.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/c5fd8388-62a2-40a2-8fc2-5ca00341ae1d"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResponse"
+                }
+              }
+            },
+            "headers": {}
+          }
+        }
+      }
+    },
+    "/clients/{clientId}": {
+      "put": {
+        "summary": "Update client details",
+        "description": "Edit details of an existing client using their ID.",
+        "operationId": "editClient",
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "path",
+            "description": "ID of the client to be edited.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/clientId"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Bearer token for user authentication.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Authorization"
+            }
+          }
+        ],
+        "tags": [],
+        "requestBody": {
+          "description": "Updated client data",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Client"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Client successfully edited.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Client"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad Request. Invalid input or missing required fields.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResponse"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "Client not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResponse"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResponse"
+                }
+              }
+            },
+            "headers": {}
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a client",
+        "description": "Removes a client using their unique ID.",
+        "operationId": "deleteClient",
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "path",
+            "description": "The ID of the client to delete.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/clientId"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Bearer token for user authentication.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Authorization"
+            }
+          }
+        ],
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "Client successfully deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResponse"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "Client not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResponse"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResponse"
+                }
+              }
+            },
+            "headers": {}
+          }
+        }
+      },
+      "get": {
+        "summary": "Retrieve client details",
+        "description": "Fetch details of a specific client using their ID.",
+        "operationId": "getClient",
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "path",
+            "description": "The ID of the client to retrieve.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/clientId"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Bearer token for user authentication.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Authorization"
+            }
+          }
+        ],
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "Successful retrieval of client details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Client"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "Client not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResponse"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResponse"
+                }
+              }
+            },
+            "headers": {}
+          }
+        }
+      }
+    }
+  }
+}

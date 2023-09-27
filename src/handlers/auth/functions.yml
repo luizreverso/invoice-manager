@@ -1,0 +1,61 @@
+login:
+  handler: src/handlers/auth/login.handler
+  events:
+    - http:
+        path: /login
+        method: post
+        documentation:
+          summary: "User login"
+          description: "Authenticate a user with provided username and password."
+          requestBody:
+            description: "Credentials for logging in."
+            required: true
+          requestModels:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                    description: "The username of the user."
+                  password:
+                    type: string
+                    description: "The password for the user."
+          methodResponses:
+            - statusCode: 200
+              responseBody:
+                description: "Authentication token."
+              responseModels:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                        description: Bearer token for authentication.
+            - statusCode: 500
+              responseBody:
+                description: "Internal server error."
+              responseModels:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      error:
+                        type: string
+                        description: Description of the error.
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - "cognito-idp:AdminInitiateAuth"
+      Resource:
+        Fn::Join:
+          - ""
+          - - "arn:aws:cognito-idp:"
+            - Ref: "AWS::Region"
+            - ":"
+            - Ref: "AWS::AccountId"
+            - ":userpool/"
+            - Ref: CognitoUserPool
+auth:
+  handler: src/handlers/auth/auth.handler

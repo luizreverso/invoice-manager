@@ -1,0 +1,73 @@
+createUser:
+  handler: src/handlers/users/create.handler
+  events:
+    - http:
+        path: /users
+        method: post
+        documentation:
+          summary: "Create a new user in Cognito"
+          description: "Registers a new user with the provided email and password in AWS Cognito."
+          requestBody:
+            description: "User details for registration."
+            required: true
+          requestModels:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  email:
+                    type: string
+                    format: email
+                    description: "Email of the user. Must be a valid email format."
+                  password:
+                    type: string
+                    description: "Password for the user. Must have 8+ characters, including at least 1 uppercase, 1 lowercase, 1 number and 1 special symbol."
+          methodResponses:
+            - statusCode: 200
+              responseBody:
+                description: "User successfully created in Cognito."
+              responseModels:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                        description: "The AWS Cognito user object."
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "cognito-idp:AdminCreateUser"
+      Resource:
+        Fn::Join:
+          - ""
+          - - "arn:aws:cognito-idp:"
+            - Ref: "AWS::Region"
+            - ":"
+            - Ref: "AWS::AccountId"
+            - ":userpool/"
+            - Ref: CognitoUserPool
+    - Effect: "Allow"
+      Action:
+        - "cognito-idp:AdminInitiateAuth"
+      Resource:
+        Fn::Join:
+          - ""
+          - - "arn:aws:cognito-idp:"
+            - Ref: "AWS::Region"
+            - ":"
+            - Ref: "AWS::AccountId"
+            - ":userpool/"
+            - Ref: CognitoUserPool
+    - Effect: "Allow"
+      Action:
+        - "cognito-idp:AdminRespondToAuthChallenge"
+      Resource:
+        Fn::Join:
+          - ""
+          - - "arn:aws:cognito-idp:"
+            - Ref: "AWS::Region"
+            - ":"
+            - Ref: "AWS::AccountId"
+            - ":userpool/"
+            - Ref: CognitoUserPool

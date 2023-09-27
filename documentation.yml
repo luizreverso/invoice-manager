@@ -1,0 +1,53 @@
+documentation:
+  api:
+    info:
+      title: Invoice Manager
+      description: This is a test application to manage invoices
+      version: "1.0.0"
+  models:
+    - name: "User"
+      description: "The User of the application"
+      contentType: "application/json"
+      schema:
+        type: "object"
+        properties:
+          email:
+            type: "string"
+            format: "email"
+          password:
+            type: "string"
+            pattern: "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d!$%@#£€*?&]{8,}$"
+    - name: "Invoice"
+      description: "The Invoice record"
+      contentType: "application/json"
+      schema:
+        type: "object"
+        properties:
+          id:
+            type: "string"
+          owner:
+            type: "string"
+          invoiceNumber:
+            type: "integer"
+          status:
+            type: "string"
+          dueDate:
+            type: "string"
+            format: "date"
+          clientId:
+            type: "string"
+    - name: "Client"
+      description: "The Client record"
+      contentType: "application/json"
+      schema:
+        type: "object"
+        properties:
+          name:
+            type: "string"
+          email:
+            type: "string"
+            format: "string"
+          address:
+            type: "string"
+          phone:
+            type: "string"
